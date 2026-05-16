@@ -737,6 +737,9 @@ public abstract class BukkitData implements Data {
             }
             final Player player = user.getPlayer();
 
+            // XiaoMoMi: If dead player die twice, the inventory will be lost
+            if (player.isDead()) return;
+
             // Set health
             try {
                 player.setHealth(Math.min(health, player.getMaxHealth()));
