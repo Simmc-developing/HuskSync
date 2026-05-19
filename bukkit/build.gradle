@@ -20,6 +20,8 @@ dependencies {
     implementation 'space.arim.morepaperlib:morepaperlib:0.4.4'
     implementation 'de.tr7zw:item-nbt-api:2.15.5'
 
+    compileOnly rootProject.files("bukkit/libs/server.jar")
+    compileOnly rootProject.files("bukkit/libs/datafixerupper.jar")
     compileOnly "io.papermc.paper:paper-api:${paper_api_version}"
     compileOnly 'com.github.retrooper:packetevents-spigot:2.10.1'
     compileOnly 'com.github.dmulloy2:ProtocolLib:5.3.0'
@@ -52,6 +54,7 @@ sourceSets.main {
     java.srcDirs '../src/main/java'
     resources.srcDirs '../src/main/resources'
 }
+javadoc.enabled = false
 javadoc.setSource('./build/generated/preprocessed/main/java')
 
 preprocess {
