@@ -193,4 +193,11 @@ public abstract class OnlineUser extends User implements CommandUser, UserDataHo
      * @return if the player is a NPC with metadata
      */
     public abstract boolean isNpc();
+
+    /**
+     * Disconnect the player from the server with a reason message
+     *
+     * @param reason the reason for disconnection (Component)
+     */
+    public abstract void disconnect(@NotNull Component reason);
 }

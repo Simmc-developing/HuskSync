@@ -19,12 +19,16 @@
 
 package net.william278.husksync.sync;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.data.DataSnapshot;
 import net.william278.husksync.user.OnlineUser;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class LockstepDataSyncer extends DataSyncer {
 
@@ -80,6 +84,15 @@ public class LockstepDataSyncer extends DataSyncer {
                     plugin.unlockPlayer(user.getUuid());
                 }
         ));
+    }
+
+    // In LOCKSTEP mode, we must kick players when the database is unreachable
+    // to prevent desync caused by loading incomplete or stale data
+    @Override
+    protected void onDatabaseFailure(@NotNull OnlineUser user) {
+        plugin.log(Level.WARNING, "Database unreachable for %s in LOCKSTEP mode - kicking player to prevent desync"
+                .formatted(user.getName()));
+        user.disconnect(Component.text("数据加载失败。请重试。").style(Style.style(NamedTextColor.RED)));
     }
 
 }

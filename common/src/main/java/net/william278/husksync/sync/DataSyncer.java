@@ -174,8 +174,15 @@ public abstract class DataSyncer {
             );
         } catch (Throwable e) {
             plugin.log(Level.WARNING, "Failed to set %s's data from the database".formatted(user.getName()), e);
-            user.completeSync(false, DataSnapshot.UpdateCause.SYNCHRONIZED, plugin);
+            onDatabaseFailure(user);
         }
+    }
+
+    // Called when the database fails during sync - may be overridden by subclasses
+    // Default behavior is to complete sync with failure, but strict modes may kick the player
+    @ApiStatus.Internal
+    protected void onDatabaseFailure(@NotNull OnlineUser user) {
+        user.completeSync(false, DataSnapshot.UpdateCause.SYNCHRONIZED, plugin);
     }
 
     // Continuously listen for data from Redis

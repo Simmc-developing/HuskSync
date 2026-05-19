@@ -25,6 +25,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 //#if MC>=12104
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 //#else
@@ -171,6 +172,11 @@ public class FabricUser extends OnlineUser implements FabricUserDataHolder {
     @Override
     public boolean isNpc() {
         return false;
+    }
+
+    @Override
+    public void disconnect(@NotNull Component reason) {
+        player.networkHandler.disconnect(reason);
     }
 
     @Override

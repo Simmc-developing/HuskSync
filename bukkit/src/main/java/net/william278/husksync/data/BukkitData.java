@@ -586,9 +586,9 @@ public abstract class BukkitData implements Data {
 
             final List<Attribute> attributes = Lists.newArrayList();
             final AttributeSettings settings = plugin.getSettings().getSynchronization().getAttributes();
-            Registry.ATTRIBUTE.forEach(id -> {
-                final AttributeInstance instance = player.getAttribute(id);
-                if (settings.isIgnoredAttribute(id.getKey().toString()) || instance == null) {
+            net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.asHolderIdMap().forEach(id -> {
+                net.minecraft.world.entity.ai.attributes.AttributeInstance instance = ((org.bukkit.craftbukkit.entity.CraftPlayer) player).getHandle().getAttribute(id);
+                if (instance == null || settings.isIgnoredAttribute(id.getRegisteredName())) {
                     return; // We don't sync attributes not marked as to be synced
                 }
                 attributes.add(adapt(instance, settings));
@@ -610,13 +610,14 @@ public abstract class BukkitData implements Data {
         }
 
         @NotNull
-        private static Attribute adapt(@NotNull AttributeInstance instance, @NotNull AttributeSettings settings) {
+        private static Attribute adapt(@NotNull net.minecraft.world.entity.ai.attributes.AttributeInstance instance, @NotNull AttributeSettings settings) {
             return new Attribute(
-                    instance.getAttribute().getKey().toString(),
+                    instance.getAttribute().getRegisteredName(),
                     instance.getBaseValue(),
-                    instance.getModifiers().stream()
-                            .filter(modifier -> !settings.isIgnoredModifier(modifier.getName()))
-                            .map(BukkitData.Attributes::adapt).collect(Collectors.toSet())
+                    instance.getPermanentModifiers().stream()
+                            .filter(modifier -> !settings.isIgnoredModifier(modifier.id().getPath()))
+                            .map(it -> adapt(org.bukkit.craftbukkit.attribute.CraftAttributeInstance.convert(it)))
+                            .collect(Collectors.toSet())
             );
         }
 

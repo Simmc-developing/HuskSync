@@ -23,6 +23,7 @@ import de.themoep.minedown.adventure.MineDown;
 import dev.triumphteam.gui.builder.gui.StorageBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.StorageGui;
+import net.kyori.adventure.text.Component;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.data.BukkitData;
 import net.william278.husksync.data.BukkitUserDataHolder;
@@ -106,6 +107,11 @@ public class BukkitUser extends OnlineUser implements BukkitUserDataHolder {
     @Override
     public boolean isNpc() {
         return player.hasMetadata("NPC");
+    }
+
+    @Override
+    public void disconnect(@NotNull Component reason) {
+        player.kick(reason);
     }
 
     /**
